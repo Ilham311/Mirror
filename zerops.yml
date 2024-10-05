@@ -1,5 +1,5 @@
 zerops:
-  # supports monorepositories, just add
+  # supports monorepositories, just add 
   # one setup section after the other
   - setup: ubuntu0
     # ==== how to build your application ====
