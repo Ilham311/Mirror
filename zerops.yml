@@ -1,0 +1,40 @@
+zerops:
+  # supports monorepositories, just add
+  # one setup section after the other
+  - setup: ubuntu0
+    # ==== how to build your application ====
+    build:
+      # set Docker base image to the one you need
+      base: anasty17/mltb:latest
+
+      # additional setup: set working directory
+      prepareCommands:
+        - mkdir -p /usr/src/app
+        - chmod 777 /usr/src/app
+        - cp requirements.txt /usr/src/app/requirements.txt
+        - cd /usr/src/app
+        - pip3 install --no-cache-dir -r requirements.txt --break-system-packages
+
+      # copy all files to the working directory
+      buildCommands:
+        - cp -r . /usr/src/app/
+
+      # deploy the files necessary to run the app
+      deployFiles:
+        - /usr/src/app/
+
+      # *optional*: which files / folders
+      # to cache for the next use
+      # cache:
+
+    # ==== how to run your application ====
+    run:
+      base: anasty17/mltb:latest
+
+      # additional preparation commands if necessary
+      prepareCommands:
+        - cd /usr/src/app
+        - chmod +x start.sh
+
+      # how to start your application
+      start: bash /usr/src/app/start.sh
