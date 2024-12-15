@@ -1,0 +1,29 @@
+"on":
+    push:
+        branches:
+            - master
+name: Deploy to miror
+jobs:
+    porter-deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+            - name: Set Github tag
+              id: vars
+              run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+            - name: Setup porter
+              uses: porter-dev/setup-porter@v0.1.0
+            - name: Deploy stack
+              timeout-minutes: 30
+              run: exec porter apply
+              env:
+                PORTER_APP_NAME: miror
+                PORTER_CLUSTER: "1879"
+                PORTER_DEPLOYMENT_TARGET_ID: 201652da-d350-4159-a27d-5efe3a32eb9b
+                PORTER_HOST: https://cloud.porter.run
+                PORTER_PR_NUMBER: ${{ github.event.number }}
+                PORTER_PROJECT: "1992"
+                PORTER_REPO_NAME: ${{ github.event.repository.name }}
+                PORTER_TAG: ${{ steps.vars.outputs.sha_short }}
+                PORTER_TOKEN: ${{ secrets.PORTER_APP_1992_1879 }}
